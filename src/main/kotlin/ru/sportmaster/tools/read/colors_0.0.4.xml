@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">@color/a10</color>
+    <color name="red">@color/b9</color>
+    <color name="redLight">@color/b6</color>
+    <color name="redUltraLight">@color/b4</color>
+    <color name="orange">@color/c8</color>
+    <color name="yellow">@color/c7</color>
+    <color name="yellowLight">@color/d6</color>
+    <color name="green">@color/e8</color>
+    <color name="greenLight">@color/e6</color>
+    <color name="greenUltraLight">@color/e4</color>
+    <color name="blueDark">@color/f9</color>
+    <color name="blue">@color/f8</color>
+    <color name="blueUltraLight">@color/f4</color>
+    <color name="blackLight">@color/a7</color>
+    <color name="greyDark">@color/a6</color>
+    <color name="grey">@color/a5</color>
+    <color name="greyLight">@color/a4</color>
+    <color name="greyUltraLight">@color/a3</color>
+    <color name="greyExtraUltraLight">@color/a2</color>
+    <color name="greyLightTransparent">@color/a4</color>
+    <color name="white">@color/a0</color>
+    <color name="blackBlur">#4D07081B</color>
+    <color name="whiteBlur">#F0FFFFFF</color>
+    <color name="whiteTransparent">#55FFFFFF</color>
+    <color name="orangeTransparent">#22f3ae2b</color>
+</resources>
