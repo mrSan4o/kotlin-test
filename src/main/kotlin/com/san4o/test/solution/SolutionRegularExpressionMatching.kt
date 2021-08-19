@@ -16,7 +16,7 @@ object SolutionRegularExpressionMatching {
             while (pattern.length > p && string.length > s) {
                 val pc = pattern[p]
 
-                if (!pattern.isNextAnyChar(p)) {
+                if (!pattern.isNextZeroOrAny(p)) {
 
                     if (pc != '.' && string[s] != pc) {
                         return false
@@ -24,12 +24,35 @@ object SolutionRegularExpressionMatching {
                         s++
                         p++
                         if (string.length == s) {
-                            while (pattern.length > p && pattern.isNextAnyChar(p)) {
+                            while (pattern.length > p && pattern.isNextZeroOrAny(p)) {
                                 p += 2
                             }
                         }
                     }
                 } else {
+                    if (pc != '.') {
+                        var find = false
+                        while (string.length > s && string[s] == pc) {
+                            find = find || string[s] == pc
+                            s++
+                        }
+                        p += 2
+                        val endString = string.length == s
+                        while (pattern.length > p
+                            && (pattern[p] == pc
+                                    || (find && endString && pattern.isNextZeroOrAny(p))
+                                    )
+                        ) {
+                            if (find && endString && pattern.isNextZeroOrAny(p)) {
+                                p += 2
+                            } else {
+                                p++
+                            }
+                        }
+                    } else {
+
+                    }
+
                     val beforeS = s
                     val beforeP = p
                     var find = pc == '.'
@@ -43,11 +66,11 @@ object SolutionRegularExpressionMatching {
                     var ss = beforeS
                     while (pattern.length > p
                         && ((pattern[p] == pc && pattern[p] != '.')
-                                || (find && endString && pattern.isNextAnyChar(p))
+                                || (find && endString && pattern.isNextZeroOrAny(p))
                                 || (pc == '.' && (string.sameFromTheEnd(ss, pattern, p)))
                                 )
                     ) {
-                        if (find && endString && pattern.isNextAnyChar(p)) {
+                        if (find && endString && pattern.isNextZeroOrAny(p)) {
                             p += 2
                         } else {
                             if (pc == '.' && (string.sameFromTheEnd(ss, pattern, p))) {
@@ -70,10 +93,10 @@ object SolutionRegularExpressionMatching {
         ): Boolean {
             return this.length > index
                     && (this[index] == pattern[p] || pattern[p] == '.'
-                    || pattern[p] == '*' || pattern.isNextAnyChar(p))
+                    || pattern[p] == '*' || pattern.isNextZeroOrAny(p))
         }
 
-        private fun String.isNextAnyChar(index: Int): Boolean =
+        private fun String.isNextZeroOrAny(index: Int): Boolean =
             this.length > index + 1 && this[index + 1] == '*'
     }
 }
