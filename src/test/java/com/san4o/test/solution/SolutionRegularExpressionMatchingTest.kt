@@ -149,6 +149,24 @@ class SolutionRegularExpressionMatchingTest {
             )
         )
     }
+    @Test
+    fun test17() {
+        assertTrue(
+            SolutionRegularExpressionMatching.isMatch(
+                s = "abbabaaaaaaacaa",
+                p = "a*.*b.a.*c*b*a*c*"
+            )
+        )
+    }
+    @Test
+    fun test18() {
+        assertTrue(
+            SolutionRegularExpressionMatching.isMatch(
+                s = "aa",
+                p = "a*"
+            )
+        )
+    }
 
 
 }
