@@ -132,8 +132,8 @@ object SolutionRegularExpressionMatching {
             p: Int
         ): Boolean {
             return this.length > index
-                && (this[index] == pattern[p] || pattern[p] == '.'
-                || pattern[p] == '*' || pattern.isNextZeroOrAny(p))
+                    && (this[index] == pattern[p] || pattern[p] == '.'
+                    || pattern[p] == '*' || pattern.isNextZeroOrAny(p))
         }
 
         private fun String.isNextZeroOrAny(index: Int): Boolean =
@@ -158,46 +158,27 @@ object SolutionRegularExpressionMatching {
 
                 if (pattern.isNextZeroOrAny(p)) {
 
-                    val equalsCount = if (pc == '.') {
-                        string.length - s
+                    if (pc == '.') {
+
                     } else {
-                        equalCharCount(string, s, pc)
-                    }
-                    p += 2
+                        val equalsCount = equalCharCount(string, s, pc)
+                        p += 2
 
-                    var f = 0
-                    var found = false
-                    while (equalsCount >= f && !found) {
-                        val info = "'$pc*' p=${p - 2} f=$f"
-                        val subpattern = pattern.substring(p)
-                        val substring = string.substring(s + f)
-
-                        println("Compare [$info] s: $substring, p: $subpattern")
-                        if (subpattern.isEmpty() && s + equalsCount == string.length) {
-                            s += f + equalsCount
-                            found = true
-                            println("True [$info] match:\ns: $string\np: $pattern")
-                        } else if (isMatch(
-                                string = substring,
-                                pattern = subpattern
-                            )
-                        ) {
-                            s += f
-                            found = true
-
-                            println("True [$info] match:\ns: $substring\np: $subpattern")
-                        } else {
-                            println("False [$info]\ns: $substring\np: $subpattern")
-                            f++
-                        }
+                        s += foundMatchesInZeroOrAny(equalsCount, s, p, pattern, string, "'$pc*' s=$s p=${p - 2}")
                     }
                 } else {
+                    // если это простой символ или люблй то смотрим равен ли он в строке
                     if (pc != '.' && string[s] != pc) {
+                        println("NOT match: p[$p]=$pc s[$s]=${string[s]} $string <> $pattern")
                         return false
                     } else {
+                        println("match: p[$p]=$pc s[$s]=${string[s]} $string <> $pattern")
                         s++
                         p++
+                        // если строка закончилась, то смотрим не остались ли в конце
+                        // *-символы
                         if (string.length == s) {
+                            println("End string. found zeroOrAny in ${pattern.substring(p)}")
                             while (pattern.length > p && pattern.isNextZeroOrAny(p)) {
                                 p += 2
                             }
@@ -207,7 +188,42 @@ object SolutionRegularExpressionMatching {
             }
 
 
-            return pattern.length == p && string.length == s
+            val match = pattern.length == p && string.length == s
+            println("matching $match '$string' <> '$pattern'")
+            return match
+        }
+
+        private fun foundMatchesInZeroOrAny(
+            equalsCount: Int,
+            s: Int,
+            p: Int,
+            pattern: String,
+            string: String,
+            baseInfo: String
+        ): Int {
+            var f = 0
+            val subpattern = pattern.substring(p)
+            while (equalsCount >= f) {
+                val info = "$baseInfo f=$f/$equalsCount"
+                val substring = string.substring(s + f)
+
+                println("Compare [$info] - $substring <> $subpattern in $string <> $pattern")
+                if (subpattern.isEmpty() && s + equalsCount == string.length) {
+                    println("Compare True [$info] - $substring <> $subpattern in $string <> $pattern")
+                    return f + equalsCount
+                } else if (subpattern.isNotEmpty() && isMatch(substring, subpattern)) {
+                    println("Compare True [$info] - $substring <> $subpattern in $string <> $pattern")
+                    return f
+                } else {
+                    println("Compare False [$info] - $substring <> $subpattern in $string <> $pattern")
+                    f++
+                }
+            }
+            return 0
+        }
+
+        private fun println(message: String) {
+            kotlin.io.println(message)
         }
 
         private fun String.isNextZeroOrAny(index: Int): Boolean =
