@@ -2,7 +2,7 @@ package com.san4o.test.solution
 
 object SolutionRegularExpressionMatching {
     fun isMatch(s: String, p: String): Boolean {
-        return Solution2.isMatch(s, p)
+        return Solution21.isMatch(s, p)
     }
 
     object Solution {
@@ -150,8 +150,12 @@ object SolutionRegularExpressionMatching {
             if (pattern.indexOf('.') == -1 && pattern.indexOf('*') == -1) {
                 return string == pattern
             }
-            if (string.isEmpty() && pattern.length == 2 && pattern[1] == '*') {
-                return true
+            if (string.isEmpty()) {
+                var p = 0
+                while (pattern.length > p && pattern.isNextZeroOrAny(p)) {
+                    p += 2
+                }
+                return pattern.length == p
             }
 
             var s = 0
@@ -161,65 +165,42 @@ object SolutionRegularExpressionMatching {
 
                 if (pattern.isNextZeroOrAny(p)) {
 
-                    if (pc == '.') {
-                        if (p + 1 == pattern.length - 1) {
-                            // если конец паттерна значит вся оставшаяся строка мачится
-                            p += 2
-                            s = string.length
-                            return true
-                        } else {
-                            // если не конец, то надо смотреть что идет после pc
-                            val pn = p + 2
-                            val pcn = pattern[pn]
-                            if (pn + 1 < pattern.length && pattern[pn + 1] == '*') {
-                                // если за pcn следует * значит надо рассматривать как zeroOrAny
-                                p += 2
-                                s += foundMatchesZeroOrAnyCount(
-                                    baseInfo = "'$pc*' s=$s p=${p - 2}",
-                                    paramInfo = "$string <> $pattern",
-                                    string = string,
-                                    start = s,
-                                    subpattern = pattern.substring(p),
-                                    equalsCount = string.length - s
-                                )
+                    if (pc == '.' && p + 1 == pattern.length - 1) {
+                        return true
+                    }
+                    // если * перед буквой то ищем ее последующее повторение
+                    val equalsCount = equalCharCount(string, s, pc)
+                    p += 2
+
+                    // далее пытаемся определить сколько pc захватывает символов в строке
+                    // сравнивая оставшуюся часть строки с оставшейся частью паттерна
+                    val baseInfo = "'$pc*' s=$s p=${p - 2}"
+                    val paramInfo = "$string <> $pattern"
+                    val subpattern = pattern.substring(p)
+                    if (subpattern.isEmpty()) {
+                        // Если оставшейся части паттерна нет, значит то что нашлось в equalsCount
+                        // последнее то что нашлось по патерну
+                        s += equalsCount
+                    } else if (equalsCount > 0) {
+                        var f = 0
+                        while (equalsCount >= f) {
+                            val info = "$baseInfo f=$f/$equalsCount"
+                            val substring = string.substring(s + f)
+
+                            println("Compare [$info] - $substring <> $subpattern in $paramInfo")
+
+                            if (isMatch(substring, subpattern)) {
+                                // проверяем как отдельную задачу
+                                // в случае успеха возвращаем смещение
+                                println("Compare True [$info] - $substring <> $subpattern in $paramInfo")
+                                return true
                             } else {
-                                // иначе это либо конец патерна, либо обычный символ
-                                val subpattern = pattern.substring(p + 2)
-
-                                p += 2
-                                val baseInfo = "'$pc*' s=$s p=${p - 2}"
-                                val paramInfo = "$string <> $pattern"
-                                var f = 0
-                                val substring = string.substring(s)
-                                val length = substring.length
-                                while (length > f) {
-                                    val info = "$baseInfo f=$f/$length"
-                                    val substringf = substring.substring(f)
-                                    println("Compare [$info] - $substringf <> $subpattern in $paramInfo")
-
-                                    if ((substring[f] == pcn || pcn == '.') && isMatch(substringf, subpattern)) {
-                                        return true
-                                    } else {
-                                        f++
-                                    }
-                                }
+                                // в случае провала уменьшаем строку на один элемент
+                                // и рассматриваем его
+                                println("Compare False [$info] - $substring <> $subpattern in $paramInfo")
+                                f++
                             }
                         }
-                    } else {
-                        // если * перед буквой то ищем ее последующее повторение
-                        val equalsCount = equalCharCount(string, s, pc)
-                        p += 2
-
-                        // далее пытаемся определить сколько pc захватывает символов в строке
-                        // сравнивая оставшуюся часть строки с оставшейся частью паттерна
-                        s += foundMatchesZeroOrAnyCount(
-                            baseInfo = "'$pc*' s=$s p=${p - 2}",
-                            paramInfo = "$string <> $pattern",
-                            string = string,
-                            start = s,
-                            subpattern = pattern.substring(p),
-                            equalsCount = equalsCount
-                        )
                     }
                 } else {
                     // если это простой символ или люблй то смотрим равен ли он в строке
@@ -296,12 +277,296 @@ object SolutionRegularExpressionMatching {
             this.length > i && this[i] == c
 
         private fun equalCharCount(string: String, start: Int, pc: Char): Int {
+            if (pc == '.') return string.length - start
             var findCount = 0
             var i = start
             while (string.length > i && string[i++] == pc) {
                 findCount++
             }
             return findCount
+        }
+    }
+
+    object Solution21 {
+        fun isMatch(string: String, pattern: String): Boolean {
+            return isMatch(string, 0, pattern, 0)
+        }
+
+        private fun isMatch(string: String, startStr: Int, pattern: String, startPtr: Int): Boolean {
+            // println("\nmatching:\ns: $string\np: $pattern")
+            if (pattern.indexOf('.') == -1 && pattern.indexOf('*') == -1) {
+                return string == pattern
+            }
+            if (string.length == startStr) {
+                // если строка полностью рассмотрена
+                // то проверяем в паттерн не остался ли набор только из zeroOrMore
+                return isOnlyZeroOrMoreCharsToEnd(pattern, startPtr)
+            }
+
+            var s = startStr
+            var p = startPtr
+            while (pattern.length > p && string.length > s) {
+                val pc = pattern[p]
+                val str = string[s]
+
+                val pn = p + 1
+                if (pattern.length > pn) {
+                    val pcn = pattern[pn]
+                    if (pcn.isZeroOrMore()) {
+
+                        if (pc.isAny()) {
+                            p += 2
+
+                            if (pn == pattern.lastIndex || isOnlyZeroOrMoreCharsToEnd(pattern, pn + 1)) {
+                                // если это конец паттерна или до конца паттерна только ZeroOrMore символы
+                                // то все в строке мачится
+                                return true
+                            }
+
+                            while (pattern.length > p) {
+                                val fpc = pattern[p]
+                                val fpn = p + 1
+
+                                // если следующий за fpc символ * или текущий *
+                                // то идем дальше
+                                if ((pattern.length > fpn && pattern[fpn].isZeroOrMore()) || fpc.isZeroOrMore()) {
+                                    p++
+                                } else {
+                                    // идем по строке и находим символ равный fpc
+                                    // и смотрим строку после него можно рассматривать
+                                    // как то что замачится по существующему алгоритму
+                                    while (string.length > s) {
+                                        if ((fpc.isAny() || string[s] == fpc) && isMatch(string, s, pattern, p)) {
+                                            return true
+                                        } else {
+                                            s++
+                                        }
+                                    }
+                                    return false
+                                }
+                            }
+                        } else {
+                            val equalsCount = equalCharCount(string, s, pc)
+                            p += 2
+                            while (pattern.isNextZeroOrMore(p) && pc == pattern[p]) {
+                                p += 2
+                            }
+
+                            // далее пытаемся определить сколько pc захватывает символов в строке
+                            // сравнивая оставшуюся часть строки с оставшейся частью паттерна
+                            val baseInfo = "'$pc*' s=$s p=${p - 2}"
+                            val paramInfo = "$string <> $pattern"
+                            if (pattern.length == p) {
+                                // Если оставшейся части паттерна нет, значит то что нашлось в equalsCount
+                                // последнее то что нашлось по патерну
+                                s += equalsCount
+                            } else if (equalsCount > 0) {
+                                if (isMatchWithAnySizeOfZeroOrAny(
+                                        string,
+                                        s,
+                                        pattern,
+                                        p,
+                                        equalsCount,
+                                        baseInfo,
+                                        paramInfo
+                                    )
+                                ) return true
+                            }
+                        }
+                        continue
+                    }
+                }
+
+                // если это простой символ или люблй то смотрим равен ли он в строке
+                if (!pc.isAny() && str != pc) {
+                    println("NOT match: p[$p]=$pc s[$s]=${str} $string <> $pattern")
+                    return false
+                } else {
+                    println("match: p[$p]=$pc s[$s]=${str} $string <> $pattern")
+                    s++
+                    p++
+                    // если строка закончилась, то смотрим не остались ли в конце
+                    // *-символы
+                    if (string.length == s && pattern.isNotEmpty()) {
+                        println("End string. found zeroOrAny in '${pattern.substring(p)}'")
+                        while (pattern.length > p && pattern.isNextZeroOrMore(p)) {
+                            p += 2
+                        }
+                    }
+                }
+            }
+
+            val match = pattern.length == p && string.length == s
+            println("matching $match '$string' <> '$pattern'")
+            return match
+        }
+
+        private fun isOnlyZeroOrMoreCharsToEnd(pattern: String, start: Int): Boolean {
+            var p = start
+            while (pattern.length > p + 1 && pattern[p + 1].isZeroOrMore()) {
+                p += 2
+            }
+            return pattern.length == p
+        }
+
+        private fun isMatchWithAnySizeOfZeroOrAny(
+            string: String,
+            s: Int,
+            pattern: String,
+            p: Int,
+            equalsCount: Int,
+            baseInfo: String,
+            paramInfo: String
+        ): Boolean {
+            var f = 0
+            while (equalsCount >= f) {
+                val info = "$baseInfo f=$f/$equalsCount"
+                val compareInfo = "${string.substring(s + f)} <> ${pattern.substring(p)}"
+                println("Compare [$info] - $compareInfo in $paramInfo")
+
+                val startStr = s + f
+
+                if (isMatch(string, startStr, pattern, p)) {
+                    // проверяем как отдельную задачу
+                    // в случае успеха возвращаем смещение
+                    println("Compare True [$info] - $compareInfo in $paramInfo")
+                    return true
+                }
+                // в случае провала уменьшаем строку на один элемент
+                // и рассматриваем его
+                println("Compare False [$info] - $compareInfo in $paramInfo")
+                f++
+            }
+            return false
+        }
+
+        private fun println(message: String) {
+            kotlin.io.println(message)
+        }
+
+        private fun String.isNextZeroOrMore(index: Int): Boolean =
+            isZeroOrMore(index + 1)
+
+        private fun String.isZeroOrMore(index: Int): Boolean =
+            isMatch(index, '*')
+
+        private fun Char.isAny(): Boolean = this == '.'
+        private fun Char.isZeroOrMore(): Boolean = this == '*'
+
+        private fun String.isMatch(i: Int, c: Char): Boolean =
+            this.length > i && this[i] == c
+
+        private fun equalCharCount(string: String, start: Int, pc: Char): Int {
+            if (pc == '.') return string.length - start
+            var findCount = 0
+            var i = start
+            while (string.length > i && string[i++] == pc) {
+                findCount++
+            }
+            return findCount
+        }
+    }
+
+    object Solution3 {
+        fun isMatch(string: String, pattern: String): Boolean {
+            // println("\nmatching:\ns: $string\np: $pattern")
+            if (pattern.isEmpty()) return false
+            if (pattern.indexOf('.') == -1 && pattern.indexOf('*') == -1) {
+                return string == pattern
+            }
+            if (string.isEmpty()) {
+                var p = 0
+                while (pattern.length > p && pattern[p + 1] == '*') {
+                    p += 2
+                }
+                return pattern.length == p
+            }
+
+            var s = 0
+            var p = 0
+            while (pattern.length > p && string.length > s) {
+                val pc = pattern[p]
+
+                if (pattern.isNextZeroOrAny(p)) {
+
+                    if (pc == '.' && p + 1 == pattern.length - 1) {
+                        return true
+                    }
+                    // если * перед буквой то ищем ее последующее повторение
+                    val equalsCount = equalCharCount(string, s, pc)
+                    p += 2
+
+                    // далее пытаемся определить сколько pc захватывает символов в строке
+                    // сравнивая оставшуюся часть строки с оставшейся частью паттерна
+                    val subpattern = pattern.substring(p)
+                    if (subpattern.isEmpty()) {
+                        // Если оставшейся части паттерна нет, значит то что нашлось в equalsCount
+                        // последнее то что нашлось по патерну
+                        s += equalsCount
+                    } else if (equalsCount > 0) {
+                        var f = 0
+                        while (equalsCount >= f) {
+
+                            val substring = string.substring(s + f)
+
+                            if (isMatch(substring, subpattern)) {
+                                // проверяем как отдельную задачу
+                                // в случае успеха возвращаем смещение
+
+                                return true
+                            } else {
+                                // в случае провала уменьшаем строку на один элемент
+                                // и рассматриваем его
+
+                                f++
+                            }
+                        }
+                    }
+                } else {
+                    // если это простой символ или люблй то смотрим равен ли он в строке
+                    if (pc != '.' && string[s] != pc) {
+                        return false
+                    } else {
+                        s++
+                        p++
+                        // если строка закончилась, то смотрим не остались ли в конце
+                        // *-символы
+                        if (string.length == s && pattern.isNotEmpty()) {
+                            while (pattern.length > p && pattern.isNextZeroOrAny(p)) {
+                                p += 2
+                            }
+                        }
+                    }
+                }
+            }
+
+            return pattern.length == p && string.length == s
+        }
+
+        private fun String.isNextZeroOrAny(index: Int): Boolean =
+            isMatch(index + 1, '*')
+
+        private fun String.isMatch(i: Int, c: Char): Boolean =
+            this.length > i && this[i] == c
+
+        private fun equalCharCount(string: String, start: Int, pc: Char): Int {
+            if (pc == '.') return string.length - start
+            var findCount = 0
+            var i = start
+            while (string.length > i && string[i++] == pc) {
+                findCount++
+            }
+            return findCount
+        }
+    }
+
+    object Solution4 {
+        fun isMatch(string: String, pattern: String): Boolean {
+            if (pattern.isEmpty()) return false
+            if (pattern.indexOf('.') == -1 && pattern.indexOf('*') == -1) {
+                return string == pattern
+            }
+            return false
         }
     }
 }

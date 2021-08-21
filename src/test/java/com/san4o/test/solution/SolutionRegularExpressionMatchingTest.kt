@@ -218,8 +218,17 @@ class SolutionRegularExpressionMatchingTest {
     fun test18() {
         assertTrue(
             SolutionRegularExpressionMatching.isMatch(
-                s = "aa",
-                p = "a*"
+                s = "abcaaaaaaabaabcabac",
+                p = ".*ab.a.*a*a*.*b*b*"
+            )
+        )
+    }
+    @Test
+    fun test180() {
+        assertTrue(
+            SolutionRegularExpressionMatching.isMatch(
+                s = "abcaaaabac",
+                p = ".*ab.a.*b*b*"
             )
         )
     }
