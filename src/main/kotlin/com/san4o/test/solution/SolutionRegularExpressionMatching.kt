@@ -132,8 +132,8 @@ object SolutionRegularExpressionMatching {
             p: Int
         ): Boolean {
             return this.length > index
-                    && (this[index] == pattern[p] || pattern[p] == '.'
-                    || pattern[p] == '*' || pattern.isNextZeroOrAny(p))
+                && (this[index] == pattern[p] || pattern[p] == '.'
+                || pattern[p] == '*' || pattern.isNextZeroOrAny(p))
         }
 
         private fun String.isNextZeroOrAny(index: Int): Boolean =
@@ -159,11 +159,19 @@ object SolutionRegularExpressionMatching {
                 if (pattern.isNextZeroOrAny(p)) {
 
                     if (pc == '.') {
-
+                        if (p + 1 == pattern.length - 1) {
+                            // если конец паттерна значит вся оставшаяся строка мачится
+                            return true
+                        } else {
+                            // если не конец, то надо смотреть что идет дальше
+                            val pcn = pattern[p + 2]
+                        }
                     } else {
+                        // если * перед буквой то ищем ее последующее повторение
                         val equalsCount = equalCharCount(string, s, pc)
                         p += 2
 
+                        // далее рекурсивно проверяем оставшийся патерн с какой частью строки мачится
                         s += foundMatchesInZeroOrAny(equalsCount, s, p, pattern, string, "'$pc*' s=$s p=${p - 2}")
                     }
                 } else {
@@ -177,8 +185,8 @@ object SolutionRegularExpressionMatching {
                         p++
                         // если строка закончилась, то смотрим не остались ли в конце
                         // *-символы
-                        if (string.length == s) {
-                            println("End string. found zeroOrAny in ${pattern.substring(p)}")
+                        if (string.length == s && pattern.isNotEmpty()) {
+                            println("End string. found zeroOrAny in '${pattern.substring(p)}'")
                             while (pattern.length > p && pattern.isNextZeroOrAny(p)) {
                                 p += 2
                             }
@@ -186,7 +194,6 @@ object SolutionRegularExpressionMatching {
                     }
                 }
             }
-
 
             val match = pattern.length == p && string.length == s
             println("matching $match '$string' <> '$pattern'")
@@ -203,15 +210,22 @@ object SolutionRegularExpressionMatching {
         ): Int {
             var f = 0
             val subpattern = pattern.substring(p)
+            val equalsEnd = s + equalsCount
+            val stringEnd = string.length
             while (equalsCount >= f) {
                 val info = "$baseInfo f=$f/$equalsCount"
                 val substring = string.substring(s + f)
 
                 println("Compare [$info] - $substring <> $subpattern in $string <> $pattern")
-                if (subpattern.isEmpty() && s + equalsCount == string.length) {
-                    println("Compare True [$info] - $substring <> $subpattern in $string <> $pattern")
+
+                if (subpattern.isEmpty()) {
+                    // Если оставшейся части паттерна нет, значит то что нашлось в equalsCount
+                    // последнее то что нашлось по патерну
                     return f + equalsCount
-                } else if (subpattern.isNotEmpty() && isMatch(substring, subpattern)) {
+                } else if (isMatch(substring, subpattern)) {
+                    // Если оставшаяся часть паттерна есть,
+                    // проверяем ее как отдельную задачу
+                    // в случае успеха в
                     println("Compare True [$info] - $substring <> $subpattern in $string <> $pattern")
                     return f
                 } else {

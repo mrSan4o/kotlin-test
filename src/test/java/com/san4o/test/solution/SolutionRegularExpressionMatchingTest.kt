@@ -5,6 +5,35 @@ import org.junit.Assert.*
 import org.junit.Test
 
 class SolutionRegularExpressionMatchingTest {
+
+    @Test
+    fun test01() {
+        assertTrue(
+            SolutionRegularExpressionMatching.isMatch(
+                s = "aaab",
+                p = "a*b"
+            )
+        )
+    }
+    @Test
+    fun test02() {
+        assertTrue(
+            SolutionRegularExpressionMatching.isMatch(
+                s = "aaab",
+                p = "a*ab"
+            )
+        )
+    }
+    @Test
+    fun test03() {
+        assertTrue(
+            SolutionRegularExpressionMatching.isMatch(
+                s = "aabad",
+                p = "a*b*ad"
+            )
+        )
+    }
+
     @Test
     fun test1() {
         assertFalse(
