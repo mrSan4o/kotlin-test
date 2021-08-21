@@ -145,10 +145,13 @@ object SolutionRegularExpressionMatching {
 
     object Solution2 {
         fun isMatch(string: String, pattern: String): Boolean {
-            println("\nmatching:\ns: $string\np: $pattern")
+            // println("\nmatching:\ns: $string\np: $pattern")
             if (pattern.isEmpty()) return false
             if (pattern.indexOf('.') == -1 && pattern.indexOf('*') == -1) {
                 return string == pattern
+            }
+            if (string.isEmpty() && pattern.length == 2 && pattern[1] == '*') {
+                return true
             }
 
             var s = 0
@@ -161,18 +164,62 @@ object SolutionRegularExpressionMatching {
                     if (pc == '.') {
                         if (p + 1 == pattern.length - 1) {
                             // если конец паттерна значит вся оставшаяся строка мачится
+                            p += 2
+                            s = string.length
                             return true
                         } else {
-                            // если не конец, то надо смотреть что идет дальше
-                            val pcn = pattern[p + 2]
+                            // если не конец, то надо смотреть что идет после pc
+                            val pn = p + 2
+                            val pcn = pattern[pn]
+                            if (pn + 1 < pattern.length && pattern[pn + 1] == '*') {
+                                // если за pcn следует * значит надо рассматривать как zeroOrAny
+                                p += 2
+                                s += foundMatchesZeroOrAnyCount(
+                                    baseInfo = "'$pc*' s=$s p=${p - 2}",
+                                    paramInfo = "$string <> $pattern",
+                                    string = string,
+                                    start = s,
+                                    subpattern = pattern.substring(p),
+                                    equalsCount = string.length - s
+                                )
+                            } else {
+                                // иначе это либо конец патерна, либо обычный символ
+                                val subpattern = pattern.substring(p + 2)
+
+                                p += 2
+                                val baseInfo = "'$pc*' s=$s p=${p - 2}"
+                                val paramInfo = "$string <> $pattern"
+                                var f = 0
+                                val substring = string.substring(s)
+                                val length = substring.length
+                                while (length > f) {
+                                    val info = "$baseInfo f=$f/$length"
+                                    val substringf = substring.substring(f)
+                                    println("Compare [$info] - $substringf <> $subpattern in $paramInfo")
+
+                                    if ((substring[f] == pcn || pcn == '.') && isMatch(substringf, subpattern)) {
+                                        return true
+                                    } else {
+                                        f++
+                                    }
+                                }
+                            }
                         }
                     } else {
                         // если * перед буквой то ищем ее последующее повторение
                         val equalsCount = equalCharCount(string, s, pc)
                         p += 2
 
-                        // далее рекурсивно проверяем оставшийся патерн с какой частью строки мачится
-                        s += foundMatchesInZeroOrAny(equalsCount, s, p, pattern, string, "'$pc*' s=$s p=${p - 2}")
+                        // далее пытаемся определить сколько pc захватывает символов в строке
+                        // сравнивая оставшуюся часть строки с оставшейся частью паттерна
+                        s += foundMatchesZeroOrAnyCount(
+                            baseInfo = "'$pc*' s=$s p=${p - 2}",
+                            paramInfo = "$string <> $pattern",
+                            string = string,
+                            start = s,
+                            subpattern = pattern.substring(p),
+                            equalsCount = equalsCount
+                        )
                     }
                 } else {
                     // если это простой символ или люблй то смотрим равен ли он в строке
@@ -200,36 +247,38 @@ object SolutionRegularExpressionMatching {
             return match
         }
 
-        private fun foundMatchesInZeroOrAny(
-            equalsCount: Int,
-            s: Int,
-            p: Int,
-            pattern: String,
+        private fun foundMatchesZeroOrAnyCount(
+            baseInfo: String,
+            paramInfo: String,
             string: String,
-            baseInfo: String
+            start: Int,
+            subpattern: String,
+            equalsCount: Int
         ): Int {
+            if (subpattern.isEmpty()) {
+                // Если оставшейся части паттерна нет, значит то что нашлось в equalsCount
+                // последнее то что нашлось по патерну
+                return equalsCount
+            }
+            if (equalsCount == 0) {
+                return 0
+            }
             var f = 0
-            val subpattern = pattern.substring(p)
-            val equalsEnd = s + equalsCount
-            val stringEnd = string.length
             while (equalsCount >= f) {
                 val info = "$baseInfo f=$f/$equalsCount"
-                val substring = string.substring(s + f)
+                val substring = string.substring(start + f)
 
-                println("Compare [$info] - $substring <> $subpattern in $string <> $pattern")
+                println("Compare [$info] - $substring <> $subpattern in $paramInfo")
 
-                if (subpattern.isEmpty()) {
-                    // Если оставшейся части паттерна нет, значит то что нашлось в equalsCount
-                    // последнее то что нашлось по патерну
-                    return f + equalsCount
-                } else if (isMatch(substring, subpattern)) {
-                    // Если оставшаяся часть паттерна есть,
-                    // проверяем ее как отдельную задачу
-                    // в случае успеха в
-                    println("Compare True [$info] - $substring <> $subpattern in $string <> $pattern")
+                if (isMatch(substring, subpattern)) {
+                    // проверяем как отдельную задачу
+                    // в случае успеха возвращаем смещение
+                    println("Compare True [$info] - $substring <> $subpattern in $paramInfo")
                     return f
                 } else {
-                    println("Compare False [$info] - $substring <> $subpattern in $string <> $pattern")
+                    // в случае провала уменьшаем строку на один элемент
+                    // и рассматриваем его
+                    println("Compare False [$info] - $substring <> $subpattern in $paramInfo")
                     f++
                 }
             }
