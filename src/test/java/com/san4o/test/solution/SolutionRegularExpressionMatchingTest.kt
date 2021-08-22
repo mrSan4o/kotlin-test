@@ -197,15 +197,6 @@ class SolutionRegularExpressionMatchingTest {
         )
     }
     @Test
-    fun test171() {
-        assertTrue(
-            SolutionRegularExpressionMatching.isMatch(
-                s = "",
-                p = "c*"
-            )
-        )
-    }
-    @Test
     fun test172() {
         assertTrue(
             SolutionRegularExpressionMatching.isMatch(
