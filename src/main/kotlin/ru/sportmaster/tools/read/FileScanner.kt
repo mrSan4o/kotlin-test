@@ -20,3 +20,7 @@ object FileScanner {
         }
     }
 }
+
+fun File.makeDirs() {
+    if (!this.mkdirs()) println("dir $this not created")
+}

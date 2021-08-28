@@ -319,7 +319,7 @@ object SolutionRegularExpressionMatching {
                         if (pc.isAny()) {
                             p += 2
 
-                            if (pn == pattern.lastIndex || isOnlyZeroOrMoreCharsToEnd(pattern, pn + 1)) {
+                            if (pn == pattern.lastIndex) {
                                 // если это конец паттерна или до конца паттерна только ZeroOrMore символы
                                 // то все в строке мачится
                                 return true
@@ -344,9 +344,12 @@ object SolutionRegularExpressionMatching {
                                             s++
                                         }
                                     }
+                                    // если нашли не zeroOrMore и его нет в строке
+                                    // значит точно не мачится
                                     return false
                                 }
                             }
+                            s = string.length
                         } else {
                             // количество возможных символов в строке
                             // которые замачатся на zerOrMore
@@ -358,13 +361,13 @@ object SolutionRegularExpressionMatching {
                                 p += 2
                             }
 
-
-
-//                            val baseInfo = "'$pc*' s=$s p=${p - 2}"
-//                            val paramInfo = "$string <> $pattern"
+                            // далее пытаемся определить сколько pc захватывает символов в строке
+                            // сравнивая оставшуюся часть строки с оставшейся частью паттерна
+                            // val baseInfo = "'$pc*' s=$s p=${p - 2}"
+                            // val paramInfo = "$string <> $pattern"
                             if (pattern.length == p) {
-                                // Если оставшейся части паттерна нет, значит то что нашлось в equalsCount
-                                // последнее то что нашлось по патерну
+                                // Если оставшейся части паттерна нет,
+                                // значит то что нашлось в equalsCount последнее что нашлось по патерну
                                 s += equalsCount
                             } else if (equalsCount > 0) {
                                 // далее пытаемся определить сколько pc захватывает символов в строке
@@ -430,7 +433,7 @@ object SolutionRegularExpressionMatching {
 
         private fun isOnlyZeroOrMoreCharsToEnd(pattern: String, start: Int): Boolean {
             var p = start
-            while (pattern.length > p + 1 && pattern[p + 1].isZeroOrMore()) {
+            while (pattern.isZeroOrMore(p + 1)) {
                 p += 2
             }
             return pattern.length == p
