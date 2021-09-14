@@ -44,6 +44,14 @@ object FileScanner {
     }
 }
 
+fun File.remove(){
+    if (this.delete()){
+        println("File removed ${this.absolutePath}")
+    }else{
+        println("Error remove file ${this.absolutePath}")
+    }
+}
+
 fun File.makeDirs() {
     if (!this.mkdirs()) println("dir $this not created")
 }
