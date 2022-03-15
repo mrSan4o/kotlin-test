@@ -1,0 +1,332 @@
+{
+  "X4L1": {
+    "fontSize": "43sp",
+    "fontWeight": 300,
+    "lineHeight": "54sp",
+    "letterSpacing": "0.3sp"
+  },
+  "X3L1": {
+    "fontSize": "33sp",
+    "fontWeight": 300,
+    "lineHeight": "42sp",
+    "letterSpacing": "0.2sp"
+  },
+  "XXL1": {
+    "fontSize": "23sp",
+    "fontWeight": 300,
+    "lineHeight": "32sp",
+    "letterSpacing": "0.1sp"
+  },
+  "XL1": {
+    "fontSize": "21sp",
+    "fontWeight": 300,
+    "lineHeight": "30sp",
+    "letterSpacing": "0.1sp"
+  },
+  "L1": {
+    "fontSize": "19sp",
+    "fontWeight": 300,
+    "lineHeight": "28sp",
+    "letterSpacing": "0.1sp"
+  },
+  "M1": {
+    "fontSize": "17sp",
+    "fontWeight": 300,
+    "lineHeight": "26sp",
+    "letterSpacing": "0.1sp"
+  },
+  "S1": {
+    "fontSize": "15sp",
+    "fontWeight": 300,
+    "lineHeight": "20sp",
+    "letterSpacing": "0.1sp"
+  },
+  "XS1": {
+    "fontSize": "13sp",
+    "fontWeight": 300,
+    "lineHeight": "16sp",
+    "letterSpacing": "0.1sp"
+  },
+  "XXS1": {
+    "fontSize": "11sp",
+    "fontWeight": 300,
+    "lineHeight": "14sp",
+    "letterSpacing": "0.1sp"
+  },
+  "X3S1_CAPS": {
+    "fontSize": "11sp",
+    "fontWeight": 300,
+    "lineHeight": "16sp",
+    "letterSpacing": "1sp"
+  },
+  "X4S1_CAPS": {
+    "fontSize": "8sp",
+    "fontWeight": 300,
+    "lineHeight": "14sp",
+    "letterSpacing": "1sp"
+  },
+  "X4L2": {
+    "fontSize": "43sp",
+    "fontWeight": 400,
+    "lineHeight": "54sp",
+    "letterSpacing": "0.3sp"
+  },
+  "X3L2": {
+    "fontSize": "33sp",
+    "fontWeight": 400,
+    "lineHeight": "42sp",
+    "letterSpacing": "0.2sp"
+  },
+  "XXL2": {
+    "fontSize": "23sp",
+    "fontWeight": 400,
+    "lineHeight": "32sp",
+    "letterSpacing": "0.1sp"
+  },
+  "XL2": {
+    "fontSize": "21sp",
+    "fontWeight": 400,
+    "lineHeight": "30sp",
+    "letterSpacing": "0.1sp"
+  },
+  "L2": {
+    "fontSize": "19sp",
+    "fontWeight": 400,
+    "lineHeight": "28sp",
+    "letterSpacing": "0.1sp"
+  },
+  "M2": {
+    "fontSize": "17sp",
+    "fontWeight": 400,
+    "lineHeight": "26sp",
+    "letterSpacing": "0.1sp"
+  },
+  "S2": {
+    "fontSize": "15sp",
+    "fontWeight": 400,
+    "lineHeight": "20sp",
+    "letterSpacing": "0.1sp"
+  },
+  "XS2": {
+    "fontSize": "13sp",
+    "fontWeight": 400,
+    "lineHeight": "16sp",
+    "letterSpacing": "0.1sp"
+  },
+  "XXS2": {
+    "fontSize": "11sp",
+    "fontWeight": 400,
+    "lineHeight": "14sp",
+    "letterSpacing": "0.1sp"
+  },
+  "X3S2_CAPS": {
+    "fontSize": "11sp",
+    "fontWeight": 400,
+    "lineHeight": "16sp",
+    "letterSpacing": "1sp"
+  },
+  "X4S2_CAPS": {
+    "fontSize": "8sp",
+    "fontWeight": 400,
+    "lineHeight": "14sp",
+    "letterSpacing": "1sp"
+  },
+  "X4L3": {
+    "fontSize": "43sp",
+    "fontWeight": 500,
+    "lineHeight": "54sp",
+    "letterSpacing": "0.3sp"
+  },
+  "X3L3": {
+    "fontSize": "33sp",
+    "fontWeight": 500,
+    "lineHeight": "42sp",
+    "letterSpacing": "0.2sp"
+  },
+  "XXL3": {
+    "fontSize": "23sp",
+    "fontWeight": 500,
+    "lineHeight": "32sp",
+    "letterSpacing": "0.1sp"
+  },
+  "XL3": {
+    "fontSize": "21sp",
+    "fontWeight": 500,
+    "lineHeight": "30sp",
+    "letterSpacing": "0.1sp"
+  },
+  "L3": {
+    "fontSize": "19sp",
+    "fontWeight": 500,
+    "lineHeight": "28sp",
+    "letterSpacing": "0.1sp"
+  },
+  "M3": {
+    "fontSize": "17sp",
+    "fontWeight": 500,
+    "lineHeight": "26sp",
+    "letterSpacing": "0.1sp"
+  },
+  "S3": {
+    "fontSize": "15sp",
+    "fontWeight": 500,
+    "lineHeight": "20sp",
+    "letterSpacing": "0.1sp"
+  },
+  "XS3": {
+    "fontSize": "13sp",
+    "fontWeight": 500,
+    "lineHeight": "16sp",
+    "letterSpacing": "0.1sp"
+  },
+  "XXS3": {
+    "fontSize": "11sp",
+    "fontWeight": 500,
+    "lineHeight": "14sp",
+    "letterSpacing": "0.1sp"
+  },
+  "X3S3_CAPS": {
+    "fontSize": "11sp",
+    "fontWeight": 500,
+    "lineHeight": "16sp",
+    "letterSpacing": "1sp"
+  },
+  "X4S3_CAPS": {
+    "fontSize": "8sp",
+    "fontWeight": 500,
+    "lineHeight": "14sp",
+    "letterSpacing": "1sp"
+  },
+  "X4L4": {
+    "fontSize": "43sp",
+    "fontWeight": 700,
+    "lineHeight": "54sp",
+    "letterSpacing": "0.3sp"
+  },
+  "X3L4": {
+    "fontSize": "33sp",
+    "fontWeight": 700,
+    "lineHeight": "42sp",
+    "letterSpacing": "0.2sp"
+  },
+  "XXL4": {
+    "fontSize": "23sp",
+    "fontWeight": 700,
+    "lineHeight": "32sp",
+    "letterSpacing": "0.1sp"
+  },
+  "XL4": {
+    "fontSize": "21sp",
+    "fontWeight": 700,
+    "lineHeight": "30sp",
+    "letterSpacing": "0.1sp"
+  },
+  "L4": {
+    "fontSize": "19sp",
+    "fontWeight": 700,
+    "lineHeight": "28sp",
+    "letterSpacing": "0.1sp"
+  },
+  "M4": {
+    "fontSize": "17sp",
+    "fontWeight": 700,
+    "lineHeight": "26sp",
+    "letterSpacing": "0.1sp"
+  },
+  "S4": {
+    "fontSize": "15sp",
+    "fontWeight": 700,
+    "lineHeight": "20sp",
+    "letterSpacing": "0.1sp"
+  },
+  "XS4": {
+    "fontSize": "13sp",
+    "fontWeight": 700,
+    "lineHeight": "16sp",
+    "letterSpacing": "0.1sp"
+  },
+  "XXS4": {
+    "fontSize": "11sp",
+    "fontWeight": 700,
+    "lineHeight": "14sp",
+    "letterSpacing": "0.1sp"
+  },
+  "X3S4_CAPS": {
+    "fontSize": "11sp",
+    "fontWeight": 700,
+    "lineHeight": "16sp",
+    "letterSpacing": "1sp"
+  },
+  "X4S4_CAPS": {
+    "fontSize": "8sp",
+    "fontWeight": 700,
+    "lineHeight": "14sp",
+    "letterSpacing": "1sp"
+  },
+  "X4L5": {
+    "fontSize": "43sp",
+    "fontWeight": 900,
+    "lineHeight": "54sp",
+    "letterSpacing": "0.3sp"
+  },
+  "X3L5": {
+    "fontSize": "33sp",
+    "fontWeight": 900,
+    "lineHeight": "42sp",
+    "letterSpacing": "0.2sp"
+  },
+  "XXL5": {
+    "fontSize": "23sp",
+    "fontWeight": 900,
+    "lineHeight": "32sp",
+    "letterSpacing": "0.1sp"
+  },
+  "XL5": {
+    "fontSize": "21sp",
+    "fontWeight": 900,
+    "lineHeight": "30sp",
+    "letterSpacing": "0.1sp"
+  },
+  "L5": {
+    "fontSize": "19sp",
+    "fontWeight": 900,
+    "lineHeight": "28sp",
+    "letterSpacing": "0.1sp"
+  },
+  "M5": {
+    "fontSize": "17sp",
+    "fontWeight": 900,
+    "lineHeight": "26sp",
+    "letterSpacing": "0.1sp"
+  },
+  "S5": {
+    "fontSize": "15sp",
+    "fontWeight": 900,
+    "lineHeight": "20sp",
+    "letterSpacing": "0.1sp"
+  },
+  "XS5": {
+    "fontSize": "13sp",
+    "fontWeight": 900,
+    "lineHeight": "16sp",
+    "letterSpacing": "0.1sp"
+  },
+  "XXS5": {
+    "fontSize": "11sp",
+    "fontWeight": 900,
+    "lineHeight": "14sp",
+    "letterSpacing": "0.1sp"
+  },
+  "X3S5_CAPS": {
+    "fontSize": "11sp",
+    "fontWeight": 900,
+    "lineHeight": "16sp",
+    "letterSpacing": "1sp"
+  },
+  "X4S5_CAPS": {
+    "fontSize": "8sp",
+    "fontWeight": 900,
+    "lineHeight": "14sp",
+    "letterSpacing": "1sp"
+  }
+}
